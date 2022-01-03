@@ -12,11 +12,14 @@ class Transactio extends Component {
   render(){
     return (
         <div className='transaction'>
-            {this.props.data.map((t)=> {
-                console.log(t.amount);
-                // <span>{t.amount}</span>
-            })}
-            {/* {this.props.data[0].amount} */}
+            {(this.props.data).map(t => 
+                <div>
+                <span>{t.amount} </span>
+                <span>{t.vendor} </span>
+                <span>{t.category} </span>
+                </div>
+
+            )}
         </div>
     )
   }
