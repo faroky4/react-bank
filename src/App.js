@@ -1,48 +1,53 @@
 
 import { Component } from 'react/cjs/react.production.min';
+import { BrowserRouter as Router, Route , Link } from 'react-router-dom';
+import axios from 'axios';
+
+
 import Transactions from './components/Transactions';
+import Transaction from './components/Transaction';
+import Operations from './components/Operations';
 
 class App extends Component {
   
   constructor() {
     super()
     this.state = {
-      data:[
-        { amount: 3200, vendor: "Elevation", category: "Salary" },
-        { amount: -7, vendor: "Runescape", category: "Entertainment" },
-        { amount: -20, vendor: "Subway", category: "Food" },
-        { amount: -98, vendor: "La Baguetterie", category: "Food" }
-      ],
-      totalAmount : 0
+      data:[],
+      transactions:[],
+      totalAmount : 0,
+      
     }
   }
 
-  updateTestText = (event) => {
-
-    this.setState({
-      data: event.target.value
-    })
+  async componentDidMount (){
+    await this.getTransactions();
+    // (this.state.data).map(t => {
+    //   this.setState({totalAmount: this.state.totalAmount+=t.amount})
+    // })
   }
-
-  componentDidMount (){
+  async getTransactions()
+  {
+    const res = await axios.get('http://localhost:5500/transactions')
+    this.setState({ data: res.data })
+  }
   
-    (this.state.data).map(t => {
-      this.setState({totalAmount: this.state.totalAmount+=t.amount})
-    })
-  }
   
   render(){
-
+    
     return (
-      <div className="App">
-        <header className="App-header">
-        <div>{this.state.totalAmount}</div>
-        <input type="text" value={this.state.data[0].amount} onChange={this.updateTestText}/>
-
-        <Transactions key={this.state.data} data={this.state.data}/>
+      <Router>
+        <div className="App">
           
-        </header>
-      </div>
+          <Link to="/"> Transactions </Link>
+          <Link to="/operations"> Operations </Link>
+          <div>{this.state.totalAmount}</div>
+          
+          <Route exact path="/" render={()=><Transactions data={this.state.data}/>} />
+          <Route exact path="/operations" render={()=><Operations data={this.state.data}/>} />
+          
+        </div>
+      </Router>
     );
   }
   

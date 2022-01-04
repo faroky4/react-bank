@@ -1,5 +1,7 @@
 
 import { Component } from 'react/cjs/react.production.min';
+import axios from 'axios';
+
 import Transaction from './Transaction'
 
 class Transactions extends Component {
@@ -10,7 +12,7 @@ class Transactions extends Component {
       
     }
   }
-  
+
   render(){
     return (
         <Transaction key={this.props.data} data={this.props.data}/>

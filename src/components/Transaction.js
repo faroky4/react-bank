@@ -1,7 +1,7 @@
 
 import { Component } from 'react/cjs/react.production.min';
 
-class Transactio extends Component {
+class Transaction extends Component {
   constructor() {
     super()
     this.state = {
@@ -26,4 +26,4 @@ class Transactio extends Component {
   
 }
 
-export default Transactio;
+export default Transaction;
