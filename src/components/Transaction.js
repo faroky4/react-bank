@@ -8,15 +8,21 @@ class Transaction extends Component {
       
     }
   }
+
+  deleteTransaction =(body)=>
+  {
+    this.props.delete(body)
+  }
   
   render(){
     return (
         <div className='transaction'>
             {(this.props.data).map(t => 
                 <div>
-                <span>{t.amount} </span>
-                <span>{t.vendor} </span>
-                <span>{t.category} </span>
+                  <span>{t.amount} </span>
+                  <span>{t.vendor} </span>
+                  <span>{t.category} </span>
+                  <button onClick={()=>this.deleteTransaction(t)}> Delete </button>
                 </div>
 
             )}

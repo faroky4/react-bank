@@ -15,7 +15,7 @@ class Transactions extends Component {
 
   render(){
     return (
-        <Transaction key={this.props.data} data={this.props.data}/>
+        <Transaction key={this.props.data} data={this.props.data} delete={this.props.delete}/>
     )
   }
   
