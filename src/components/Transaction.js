@@ -4,9 +4,7 @@ import { Component } from 'react/cjs/react.production.min';
 class Transaction extends Component {
   constructor() {
     super()
-    this.state = {
-      
-    }
+    
   }
 
   deleteTransaction =(body)=>

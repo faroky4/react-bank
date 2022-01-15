@@ -5,16 +5,13 @@ import axios from 'axios';
 import './App.css'
 
 import Transactions from './components/Transactions';
-import Transaction from './components/Transaction';
 import Operations from './components/Operations';
-import { Redirect } from 'react-router-dom';
 
 class App extends Component {
   
   constructor() {
     super()
     this.state = {
-      data:[],
       transactions:[],
       totalAmount : 0,
     }
@@ -28,39 +25,42 @@ class App extends Component {
   async getTransactions()
   {
     const res = await axios.get('http://localhost:5500/transactions')
-    this.setState({ data: res.data })
+    this.setState({ transactions: res.data })
   }
 
   async addTransaction(body)
   {
-    this.setState({totalAmount:0})
     const res = await axios.post('http://localhost:5500/transaction' ,body);
-    let tempData = [...this.state.data]
-    tempData.push(body);
+    let tempTransactions = [...this.state.transactions]
+    tempTransactions.push(body);
     this.setState({
-      data: tempData},
-      this.getTotalAmount
-    )
+      transactions: tempTransactions , 
+      totalAmount: 0
+    })
+    this.getTotalAmount()
   }
   async deletTransaction(body)
   { 
-    this.setState({totalAmount:0})
     const res = await axios.delete('http://localhost:5500/transaction' ,{data:{body}});
-    let tempData = [...this.state.data]
-    tempData.map(t=> {
+    let tempTransactions = [...this.state.transactions]
+    tempTransactions.map(t=> {
       if(t._id === body._id)
-        tempData.splice(body)
+        tempTransactions.splice(body)
     })
     this.setState({
-      data: tempData},
-      this.componentDidMount
-    )
-    this.getTransactions()
+      transactions: tempTransactions
+    })
+    this.componentDidMount()
   }
 
   getTotalAmount() {
-    (this.state.data).map(t => {
-      this.setState({totalAmount: this.state.totalAmount+=t.amount})
+    let amount = 0 
+
+    for(let trans of this.state.transactions){
+      amount += trans.amount
+    }
+    this.setState({
+      totalAmount: amount
     })
   }
 
@@ -91,7 +91,7 @@ class App extends Component {
           </div>
           
           <Route exact path="/transactions" render={()=>
-            <Transactions data={this.state.data} delete={this.delete} />} />
+            <Transactions data={this.state.transactions} delete={this.delete} />} />
           <Route exact path="/operations" render={()=>
             <Operations deposit={this.deposit} withdraw={this.withdraw} />} />
         </div>

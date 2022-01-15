@@ -1,8 +1,5 @@
 
 import { Component } from 'react/cjs/react.production.min';
-import axios from 'axios';
-
-import Transactions from './Transactions';
 import { Redirect } from 'react-router-dom';
 
 class Operations extends Component {
