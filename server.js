@@ -19,4 +19,6 @@ app.use(function (req, res, next) {
 });
 app.use('/',api);
 
-app.listen(process.env.PORT || port);
+app.listen(port, function(){
+  console.log(`Running server on port ${port}`)
+})

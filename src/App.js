@@ -6,6 +6,7 @@ import './App.css'
 
 import Transactions from './components/Transactions';
 import Operations from './components/Operations';
+import Category from './components/Category';
 
 class App extends Component {
   
@@ -14,54 +15,75 @@ class App extends Component {
     this.state = {
       transactions:[],
       totalAmount : 0,
+      categories : {}
     }
   }
 
-  async componentDidMount (){
+  async componentDidMount(){
     await this.getTransactions();
     this.getTotalAmount()
+    this.updateCategories();
   }
 
   async getTransactions()
   {
     const res = await axios.get('http://localhost:5500/transactions')
     this.setState({ transactions: res.data })
+    
   }
 
   async addTransaction(body)
   {
     const res = await axios.post('http://localhost:5500/transaction' ,body);
+
     let tempTransactions = [...this.state.transactions]
     tempTransactions.push(body);
     this.setState({
-      transactions: tempTransactions , 
-      totalAmount: 0
+      transactions: tempTransactions
     })
     this.getTotalAmount()
+    this.updateCategories()
   }
   async deletTransaction(body)
   { 
-    const res = await axios.delete('http://localhost:5500/transaction' ,{data:{body}});
-    let tempTransactions = [...this.state.transactions]
-    tempTransactions.map(t=> {
-      if(t._id === body._id)
-        tempTransactions.splice(body)
+    const id = body._id
+    const res = await axios.delete(`http://localhost:5500/transaction/${id}`)
+    .then(this.componentDidMount())
+    .catch(function(error){
+      console.log((error.response.data));
     })
-    this.setState({
-      transactions: tempTransactions
-    })
-    this.componentDidMount()
+    
   }
 
   getTotalAmount() {
+    
     let amount = 0 
-
+    
     for(let trans of this.state.transactions){
       amount += trans.amount
     }
+    
     this.setState({
       totalAmount: amount
     })
+  }
+
+  updateCategories() {
+    
+    let tempCategory = {}
+
+    for(let trans of this.state.transactions) {
+      if(tempCategory.hasOwnProperty(trans.category)){
+        tempCategory[trans.category] += trans.amount
+      }
+      else{
+        tempCategory[trans.category] = trans.amount
+      }
+    }
+    this.setState({
+      categories: tempCategory
+    })
+    
   }
 
   deposit = (amount, vendor, category) => {
@@ -72,6 +94,7 @@ class App extends Component {
   withdraw = (amount, vendor, category) => {
     const body = {amount, vendor, category}
     this.addTransaction(body)
+
   }
   delete = (transaction)=> {
     this.deletTransaction(transaction)
@@ -86,6 +109,7 @@ class App extends Component {
           <Link className='link' to="/"> Home </Link>
           <Link className='link' to="/transactions"> Transactions </Link>
           <Link className='link' to="/operations"> Operations </Link>
+          <Link className='link' to="/categories"> Categories </Link>
           <div className='total-amount'>
             <h4> Total Amount: {this.state.totalAmount}</h4>
           </div>
@@ -94,6 +118,8 @@ class App extends Component {
             <Transactions data={this.state.transactions} delete={this.delete} />} />
           <Route exact path="/operations" render={()=>
             <Operations deposit={this.deposit} withdraw={this.withdraw} />} />
+          <Route exact path="/categories" render={()=>
+            <Category categories={this.state.categories} />} />
         </div>
       </Router>
     );

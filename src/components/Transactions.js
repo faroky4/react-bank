@@ -5,17 +5,17 @@ import axios from 'axios';
 import Transaction from './Transaction'
 
 class Transactions extends Component {
-  constructor() {
-    super()
-
-    this.state = {
-      
-    }
-  }
 
   render(){
     return (
-        <Transaction key={this.props.data} data={this.props.data} delete={this.props.delete}/>
+      <div className='transaction'>
+            {(this.props.data).map(t => 
+                <div>
+                  <Transaction key={t} data={t} delete={this.props.delete}/>
+                </div>
+
+            )}
+      </div>
     )
   }
   

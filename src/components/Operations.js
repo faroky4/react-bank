@@ -14,17 +14,11 @@ class Operations extends Component {
     }
   }
   
-  updateAmount = (e)=>{
-    this.setState({amount: e.target.value})
-    
+  handleChange = (e) => {
+    this.setState({
+        [e.target.name]: e.target.value
+    })
   }
-  updateVendor= (e)=>{
-    this.setState({vendor: e.target.value})
-  }
-  updateCategory = (e)=>{
-    this.setState({category: e.target.value})
-  }
-
   addDepositTransactions = () => {
     this.props.deposit(parseInt(this.state.amount) , this.state.vendor , this.state.category)
     this.setState({
@@ -48,9 +42,30 @@ class Operations extends Component {
   render(){
     return (
       <div>
-        <input id='amount' type="number" placeholder='amount' value={this.state.amount} onChange={this.updateAmount}/>
-        <input id='vendor' type="text" placeholder='vendor' value={this.state.vendor} onChange={this.updateVendor}/>
-        <input id='category' type="text" placeholder='category' value={this.state.category} onChange={this.updateCategory}/>
+        <input 
+          id='amount'
+          type="number" 
+          name='amount'
+          placeholder='amount' 
+          value={this.state.amount} 
+          onChange={this.handleChange}/>
+
+        <input 
+          id='vendor' 
+          type="text" 
+          name='vendor'
+          placeholder='vendor' 
+          value={this.state.vendor} 
+          onChange={this.handleChange}/>
+
+        <input 
+          id='category' 
+          type="text" 
+          name='category'
+          placeholder='category' 
+          value={this.state.category} 
+          onChange={this.handleChange}/>
+
         <button onClick={this.addDepositTransactions}>Deposit</button>
         <button onClick={this.addWithdrawTransactions}>Withdraw</button>
         {this.state.redirect ? <Redirect to="/transactions"/> : null}

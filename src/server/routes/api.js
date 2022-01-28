@@ -3,20 +3,22 @@ const Transaction = require('../model/transactionSchema');
 const router = express.Router();
 
 router.get('/transactions', function (request, response) {
+    
     Transaction.find({}, function (err, transaction) {
-        if (err) console.log(err);
+        if (err)
+            response.send(error)
         response.send(transaction);
       });
 
 });
 
 router.post('/transaction', function (request, response) {
-    console.log(request.body);
+
     let addTransaction = new Transaction({
         amount: request.body.amount,
         category: request.body.category,
         vendor: request.body.vendor,
- 
+
       });
     
       addTransaction.save().then((Transaction) => {});
@@ -24,13 +26,21 @@ router.post('/transaction', function (request, response) {
 
     });
 
-router.delete('/transaction', function (request, response) {
+router.delete('/transaction/:id', function (request, response) {
     
-    let {body}= request.body;
-    Transaction.findOneAndDelete({ _id: body}, function (err, transaction) {
+    const transactionID = request.params.id
+    
+    Transaction.findOneAndDelete({ _id: transactionID}, function (err, transaction) {
+        if(err){
+            response.status(404).send('transaction not found')
+        }
+        else{
+            response.end();
+        }
+        
     });
-  
-    response.end();
+    
+    
 });
 
 module.exports = router;

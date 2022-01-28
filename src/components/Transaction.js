@@ -2,28 +2,25 @@
 import { Component } from 'react/cjs/react.production.min';
 
 class Transaction extends Component {
-  constructor() {
-    super()
-    
-  }
 
-  deleteTransaction =(body)=>
+  deleteTransaction =(transaction)=>
   {
-    this.props.delete(body)
+    this.props.delete(transaction)
   }
   
   render(){
+    let transaction = this.props.data
     return (
         <div className='transaction'>
-            {(this.props.data).map(t => 
-                <div>
-                  <span>{t.amount} </span>
-                  <span>{t.vendor} </span>
-                  <span>{t.category} </span>
-                  <button onClick={()=>this.deleteTransaction(t)}> Delete </button>
-                </div>
+            {
+              <div>
+                <span>{transaction.amount} </span>
+                <span>{transaction.vendor} </span>
+                <span>{transaction.category} </span>
+                <button onClick={()=>this.deleteTransaction(transaction)}> Delete </button>
+              </div>
 
-            )}
+            }
         </div>
     )
   }
